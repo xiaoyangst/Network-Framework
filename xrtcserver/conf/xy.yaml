@@ -1,0 +1,5 @@
+log:
+  log_dir: "./log/text.log"
+  log_name: "LOG"
+  log_level: "debug"
+  log_to_stderr: "true"

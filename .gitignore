@@ -1,0 +1,3 @@
+#忽略cmake-build-debug文件夹
+
+xrtcserver/cmake-build-debug/*
