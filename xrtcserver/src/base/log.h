@@ -24,6 +24,8 @@ class XrtcLog : public rtc::LogSink {
 
   int init();
   void set_log_to_stderr(bool on);
+
+  //日志系统的启动和停止
   bool start();
   void stop();
   void join();
@@ -38,17 +40,18 @@ class XrtcLog : public rtc::LogSink {
   std::string _log_file;
   std::string _log_file_wf;
 
+
   std::ofstream _out_file;
   std::ofstream _out_file_wf;
 
-  std::queue<std::string> _log_queue;   //日志队列
+  std::queue<std::string> _log_queue;
   std::mutex _mtx;
 
   std::queue<std::string> _log_queue_wf;
   std::mutex _mtx_wf;
 
   std::thread* _thread = nullptr;
-  std::atomic<bool> _running{false};
+  std::atomic<bool> _running{false};  //监测日志系统运行状态
 };
 
 } // namespace xrtc
