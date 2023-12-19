@@ -1,23 +1,27 @@
 cmake_minimum_required(VERSION 3.16)
+
 project(xrtcserver)
 
-set(CMAKE_CXX_STANDARD 11)
+add_definitions("-g -pipe -W -Wall -fPIC -std=gnu++14 -DWEBRTC_POSIX
+    -DWEBRTC_LINUX")
 
-add_definitions("-g -pipe -W -Wall -fPIC -std=gnu++14 -DWEBRTC_POSIX -DWEBRTC_LINUX")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
-
-#在链接阶段指定库文件的搜索路径
-link_directories(third_party/lib)
-
-#头文件搜索路径
+include_directories(src)
 include_directories(third_party/include)
+include_directories(../rtcbase/src)
 
-#源文件搜索路径
-aux_source_directory(src/base BASE_SRC)
-aux_source_directory(src/server SERVER_SRC)
+link_directories(
+        "./third_party/lib"
+        "../rtcbase/out"
+)
 
-add_executable(xrtcserver main.cpp ${BASE_SRC} ${SERVER_SRC})
+aux_source_directory(src SRC_LIST)
+aux_source_directory(src/base SRC_BASE)
 
-target_link_libraries(xrtcserver libyaml-cpp.a)
+add_executable(xrtcserver ${SRC_LIST} ${SRC_BASE} main.cpp)
+
+target_link_libraries(xrtcserver libyaml-cpp.a librtcbase.a -lpthread
+        libabsl_strings.a libabsl_throw_delegate.a
+)
 

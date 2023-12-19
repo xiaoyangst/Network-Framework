@@ -1,0 +1,3 @@
+/home/xy/Network-Framework/xrtcserver/build/CMakeFiles/rebuild_cache.dir
+/home/xy/Network-Framework/xrtcserver/build/CMakeFiles/edit_cache.dir
+/home/xy/Network-Framework/xrtcserver/build/CMakeFiles/xrtcserver.dir

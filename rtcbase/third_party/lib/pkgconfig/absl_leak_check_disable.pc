@@ -1,0 +1,12 @@
+prefix=/home/xy/abseil-cpp-master/out
+exec_prefix=${prefix}
+libdir=/home/xy/abseil-cpp-master/out/lib
+includedir=/home/xy/abseil-cpp-master/out/include
+
+Name: absl_leak_check_disable
+Description: Abseil leak_check_disable library
+URL: https://abseil.io/
+Version: head
+Requires:
+Libs: -L${libdir}  -labsl_leak_check_disable
+Cflags: -I${includedir} -DNOMINMAX
