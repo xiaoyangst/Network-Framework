@@ -3,6 +3,7 @@ package framework
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 )
 
 // init函数是模块framework被加载之前自动调用
@@ -12,10 +13,16 @@ func init() {
 
 // ActionInterface 定义一个通用的处理方法
 type ActionInterface interface {
-	Execute(w http.ResponseWriter, R *http.Request)
+	Execute(w http.ResponseWriter, cr *ComRequest)
 }
 
 var GActionRouter map[string]ActionInterface = make(map[string]ActionInterface)
+
+type ComRequest struct {
+	R      *http.Request
+	Logger *ComLog
+	LogId  uint32
+}
 
 func responseError(w http.ResponseWriter, R *http.Request, status int, err string) {
 	w.WriteHeader(status)
@@ -23,24 +30,64 @@ func responseError(w http.ResponseWriter, R *http.Request, status int, err strin
 		fmt.Sprintf("%d - %s", status, err)))
 }
 
-func entry(w http.ResponseWriter, R *http.Request) {
+func getRealClientIP(r *http.Request) string {
+	ip := r.RemoteAddr
+
+	if rip := r.Header.Get("X-Real-IP"); rip != "" {
+		ip = rip
+	} else if rip = r.Header.Get("X-Forwarded-IP"); rip != "" {
+		ip = rip
+	}
+
+	return ip
+}
+
+func entry(w http.ResponseWriter, r *http.Request) {
 
 	//排除图标
-	if "/favicon.ico" == R.URL.Path {
+	if "/favicon.ico" == r.URL.Path {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(""))
 		return
 	}
-	fmt.Println("====================", R.URL.Path)
+	fmt.Println("====================", r.URL.Path)
 
-	if action, ok := GActionRouter[R.URL.Path]; ok {
+	if action, ok := GActionRouter[r.URL.Path]; ok {
 		if action != nil { //不为空执行回调函数
-			action.Execute(w, R)
+
+			//初始化ComRequest
+			cr := &ComRequest{
+				R:      r,
+				Logger: &ComLog{},
+				LogId:  GetLogId32(),
+			}
+
+			cr.Logger.AddNotice("logId", strconv.Itoa(int(cr.LogId)))
+			cr.Logger.AddNotice("url", r.URL.Path)
+			cr.Logger.AddNotice("referer", r.Header.Get("Referer"))
+			cr.Logger.AddNotice("cookie", r.Header.Get("Cookie"))
+			cr.Logger.AddNotice("ua", r.Header.Get("User-Agent"))
+			cr.Logger.AddNotice("clientIP", r.RemoteAddr)
+			cr.Logger.AddNotice("realClientIP", getRealClientIP(r))
+
+			r.ParseForm()
+
+			//获取请求参数（从表单中获取）到log中
+
+			for k, v := range r.Form {
+				cr.Logger.AddNotice(k, v[0])
+			}
+
+			cr.Logger.TimeBegin("totalCost")
+			action.Execute(w, cr)
+			cr.Logger.TimeEnd("totalCost")
+
+			cr.Logger.Infof("")
 		} else {
-			responseError(w, R, http.StatusInternalServerError, "Internal Server Error!")
+			responseError(w, r, http.StatusInternalServerError, "Internal Server Error!")
 		}
 	} else {
-		responseError(w, R, http.StatusInternalServerError, "Not Found!")
+		responseError(w, r, http.StatusInternalServerError, "Not Found!")
 	}
 
 }
