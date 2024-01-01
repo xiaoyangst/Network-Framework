@@ -1,11 +1,24 @@
 package framework
 
-import "signaling/glog"
+import (
+	"signaling/src/glog"
+)
 
-func Init() error {
-	glog.SetLogDir("./log")
-	glog.SetLogFileName("signaling")
-	glog.SetLogToStderr(true)
-	glog.SetLogLevel("DEBUG")
+var gconf *FrameworkConf
+
+func Init(confFile string) error {
+
+	var err error
+
+	gconf, err = loadConf(confFile)
+
+	if err != nil {
+		return err
+	}
+
+	glog.SetLogDir(gconf.logDir)
+	glog.SetLogFileName(gconf.logFile)
+	glog.SetLogToStderr(gconf.logToStderr)
+	glog.SetLogLevel(gconf.logLevel)
 	return nil
 }

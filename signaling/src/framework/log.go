@@ -3,7 +3,7 @@ package framework
 import (
 	"fmt"
 	"math/rand"
-	"signaling/glog"
+	"signaling/src/glog"
 	"time"
 )
 
@@ -15,14 +15,14 @@ func GetLogId32() uint32 {
 	return rand.Uint32()
 }
 
-type logItem struct {
-	field string
-	value string
-}
-
 type ComLog struct {
 	mainLog []logItem
 	timeLog []timeItem
+}
+
+type logItem struct {
+	field string
+	value string
 }
 
 type timeItem struct {
@@ -30,6 +30,8 @@ type timeItem struct {
 	beginTime int64
 	endTime   int64
 }
+
+//这里的 (l *ComLog) 是接收者(receiver)，它决定了这个方法是绑定到哪个类型上的
 
 func (l *ComLog) TimeBegin(field string) {
 	item := timeItem{
