@@ -1,0 +1,16 @@
+{
+  "WebServer": {
+    "HTTP": {
+      "PORT": 8080
+    },
+    "HTTPS": {
+      "PORT": 8081,
+      "KEY": "cert/www.xiaoyangst.top.key",
+      "CERT": "cert/www.xiaoyangst.top.pem"
+    }
+  },
+  "Log": {
+    "PATH": "log",
+    "LOGLEVEL": "info"
+  }
+}

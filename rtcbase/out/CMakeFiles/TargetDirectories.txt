@@ -1,3 +1,0 @@
-/home/xy/Network-Framework/rtcbase/out/CMakeFiles/rebuild_cache.dir
-/home/xy/Network-Framework/rtcbase/out/CMakeFiles/edit_cache.dir
-/home/xy/Network-Framework/rtcbase/out/CMakeFiles/rtcbase.dir

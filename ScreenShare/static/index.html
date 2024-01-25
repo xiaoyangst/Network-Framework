@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>屏幕共享</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        #screens {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .screen {
+            border: 2px solid #333;
+            width: 45%;
+            height: 40vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #buttons {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-top: 10px;
+            background-color: #fff;
+            box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.1);
+            padding: 10px 0;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+        }
+
+        #start_stream, #stop_stream, #start_share, #stop_share {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        #stop_stream, #stop_share {
+            background-color: #f44336;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+    </style>
+</head>
+<body>
+<div id="screens">
+    <div class="screen" id="stream-screen">
+        <video id="stream_video" autoplay playsinline></video>
+        <audio id="stream_audio" autoplay></audio>
+    </div>
+    <div class="screen" id="share-screen">
+        <video id="share_video" autoplay playsinline></video>
+        <audio id="share_audio" autoplay></audio>
+    </div>
+</div>
+
+<h3>1 V 1 屏幕共享--推流端</h3>
+
+<div>
+    推流端基本信息
+    <span>
+        uid={{uid}}
+        streamName={{streamName}}
+        audio={{audio}}
+        video={{video}}
+    </span>
+    <span id="tips1"></span>
+</div>
+
+<div id="buttons">
+    <button id="start_stream">开始推流</button>
+    <button id="stop_stream">停止推流</button>
+    <button id="start_share">开始拉流</button>
+    <button id="stop_share">停止拉流</button>
+</div>
+
+<input type="hidden" id="uid" value="{{uid}}"/>
+<input type="hidden" id="streamName" value="{{streamName}}"/>
+<input type="hidden" id="audio" value="{{audio}}"/>
+<input type="hidden" id="video" value="{{video}}"/>
+
+
+<!--<script src="js/jquery-2.1.1.min.js"></script>-->
+<script src="/screenshare/js/jquery-2.1.1.min.js"></script>
+<script src="/screenshare/js/adapter.js"></script>
+<script src="/screenshare/js/push.js"></script>
+
+</body>
+</html>
+
+
